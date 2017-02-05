@@ -1,0 +1,8 @@
+#!/bin/sh
+set -ex
+rm -fr _site
+jekyll build
+# because of a jekyll bug, copy .htaccess here
+cp .htaccess _site/
+chmod -R a+rX _site
+rsync --delete -a _site/ narf.at:/data/http/vhosts/zeha.at/htdocs/

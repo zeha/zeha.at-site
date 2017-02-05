@@ -1,0 +1,18 @@
+--- 
+layout: post
+title: DMI data on consumer hardware
+mt_id: 62
+---
+<a href="http://en.wikipedia.org/wiki/Desktop_Management_Interface">Desktop Management Interface</a> - DMI is a standard for exposing base data about the system (hardware) to the running software. Usually you'd get the manufacturer name, etc.&nbsp;<br /><br /><div>At least in theory.<div><span class="Apple-style-span" style="background-color: rgb(255, 255, 255);"><br /></span>On typical consumer hardware (like&nbsp;<span class="Apple-style-span" style="background-color: rgb(255, 255, 255); "><a href="http://zeha.at/blog/2009/10/atomion-board-replaces-my-old-fileserver.html" style="text-decoration: underline; ">my Zotac board</a>), you instead get this:</span>
+<br /><br /><pre>$ dmidecode
+...
+Handle 0x0002, DMI type 2, 15 bytes
+Base Board Information
+        Manufacturer: To be filled by O.E.M.
+        Product Name: To be filled by O.E.M.
+        Version: To be filled by O.E.M.
+        Serial Number: To be filled by O.E.M.
+        Asset Tag: To Be Filled By O.E.M.
+
+...
+</pre><br />I don't need to say that there is no way of finding out what hardware you've actually got from this info.</div></div> 

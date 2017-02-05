@@ -1,0 +1,136 @@
+#!/bin/bash
+
+# Install a local apt-cacher + Java for Hudson.
+# And add GRML + FAI APT repositories.
+
+cd /root
+
+function logit() {
+        logger -si -t grmllive.run $@
+}
+
+set +x
+set +e
+
+export DEBIAN_FRONTEND=noninteractive
+
+DEBIAN_SOURCES="ftp.us.debian.org/debian squeeze main contrib non-free"
+GRML_SOURCES="deb.grml.org/ grml-testing main"
+
+logit "first apt-get update"
+echo "APT::Acquire::PDiffs \"false\";" >>/etc/apt/apt.conf
+echo "APT::Install-Recommends \"0\";" >>/etc/apt/apt.conf
+apt-get update
+
+logit "add apt-cacher for caching packages + grml-live apache site"
+apt-get install -y apt-cacher apache2
+ls -la /etc/apache2/conf.d
+sed -i 's/allow from all/allow from 127.0.0.1/' /etc/apt-cacher/apache.conf
+ln -s /etc/apt-cacher/apache.conf /etc/apache2/conf.d/apt-cacher.conf
+cat > /etc/apache2/sites-available/grml-live << EOF
+<Directory />
+Options FollowSymLinks
+AllowOverride None
+</Directory>
+<Directory /grml>
+Options Indexes
+AllowOverride None
+Order allow,deny
+allow from all
+</Directory>
+<Directory /var/log>
+Options Indexes
+AllowOverride None
+Order allow,deny
+allow from all
+</Directory>
+<Directory /var/www>
+Options Indexes
+AllowOverride None
+Order allow,deny
+allow from all
+</Directory>
+<VirtualHost *:80>
+DocumentRoot /var/www
+ErrorLog /var/log/apache2/error.log
+LogLevel warn
+#Alias /grml /grml
+#Alias /log/fai /var/log/fai
+#Alias /log/grml-live.log /var/log/grml-live.log
+</VirtualHost>
+EOF
+a2ensite grml-live
+a2dissite default
+logit "restart apache"
+/etc/init.d/apache2 restart
+cat > /var/www/index.html << EOF
+<h1>grml-live builder</h1>
+<li><a href="/grml/">/grml</a><br>
+<li><a href="/log/fai/">/var/log/fai</a><br>
+<li><a href="/log/grml-live.log">/var/log/grml-live.log</a><br>
+EOF
+
+logit "enable cached APT sources + GRML sources"
+cat > /etc/apt/sources.list << EOF
+deb http://localhost/apt-cacher/$DEBIAN_SOURCES
+deb http://localhost/apt-cacher/$GRML_SOURCES
+# one uncached GRML_SOURCES so pinning actually works
+deb http://$GRML_SOURCES
+deb http://www.informatik.uni-koeln.de/fai/download lenny koeln
+EOF
+
+logit "adjust apt-pinning (only prefer squashfs stuff from grml)"
+cat >> /etc/apt/preferences << EOF
+Package: *
+Pin: origin deb.grml.org
+Pin-Priority: 1
+
+Package: squashfs-tools
+Pin: origin deb.grml.org
+Pin-Priority: 996
+
+Package: squashfs-lzma-tools
+Pin: origin deb.grml.org
+Pin-Priority: 996
+EOF
+
+logit "install FAI repo signing key"
+gpg --keyserver pgp.mit.edu -a --recv-keys AB9B66FD ; gpg -a --export AB9B66FD | apt-key add -
+
+logit "second apt-get update"
+apt-get update
+
+logit "install grml-debian-keyring"
+apt-get --allow-unauthenticated install -y grml-debian-keyring
+logit "third apt-get update to enable grml-debian-keyring"
+apt-get update
+
+
+logit "install java"
+echo "
+# Do you agree with the DLJ license terms?
+sun-java6-bin   shared/accepted-sun-dlj-v1-1    boolean true
+sun-java6-jdk   shared/accepted-sun-dlj-v1-1    boolean true
+sun-java6-jre   shared/accepted-sun-dlj-v1-1    boolean true
+# Declined Operating System Distributor License for Java v1.1 (DLJ)
+sun-java6-bin   shared/error-sun-dlj-v1-1       error
+sun-java6-jdk   shared/error-sun-dlj-v1-1       error
+sun-java6-jre   shared/error-sun-dlj-v1-1       error
+# Operating System Distributor License for Java v1.1 (DLJ)
+sun-java6-bin   shared/present-sun-dlj-v1-1     note
+sun-java6-jdk   shared/present-sun-dlj-v1-1     note
+sun-java6-jre   shared/present-sun-dlj-v1-1     note
+" | debconf-set-selections
+apt-get install -y sun-java6-jdk
+
+logit "install tools"
+apt-get install -y wget screen zsh less git-core
+
+logit "wget rcfiles"
+wget -O .vimrc        http://git.grml.org/f/grml-etc-core/etc/vim/vimrc
+wget -O .zshrc        http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+wget -O .zshrc.local  http://git.grml.org/f/grml-etc-core/etc/skel/.zshrc
+wget -O .screenrc     http://git.grml.org/f/grml-etc-core/etc/grml/screenrc_generic
+
+
+

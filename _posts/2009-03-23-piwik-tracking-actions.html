@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: "Piwik: tracking actions"
+mt_id: 32
+---
+<a href="http://piwik.org/">Piwik</a> is an open-source web analysis tool, a bit like Google Analytics, but it's supposed to be installed on your own server. After being nagged by <a href="http://blogs.amd.co.at/robe/">Robe</a> I decided to test it on a low-traffic site (actually Robe also wrote all code to make this happen).<br /><br />Piwik assumes that you just put their supplied javascript code on your site and be done with it. The JS will modify all links so it can track site exits and such stuff. This probably works well for static web pages, but it obviously does not for already javascript-heavy sites like the site in question. <br /><br />The site actually only ever loads a single HTML page from the server, and shows you a list of links and upon clicking one of these links, the site javascript will update the page content on the fly, without forcing a full page reload (think of a picture gallery).<br />So, piwik was just ever seeing the initial page load, but not when a user clicked on such a picture link. Therefore the stats were mostly useless.<br />But: piwik can actually track custom supplied actions, and you could call the piwik tracking code <br /> 

@@ -1,0 +1,15 @@
+--- 
+layout: post
+title: "Debian Installer preseeding: autostart from PXE"
+mt_id: 7
+---
+Assume that you have a fully working Debian Installer preseed configuration. Your x86 target machines do not have CD-ROM drives (and handling CDs is cumbersome), booting from elsewhere is not really an option.<br /><br />Solution: boot from PXE. <br />DHCP, tftpd-hpa and pxelinux are set up easily in just a couple of minutes.<br /><br />Here's the pxelinux.cfg configuration as needed to make the installer enter silent mode:<br />
+<pre>label auto<br />kernel debian/etch/amd64/linux
+append vga=normal initrd=debian/etch/amd64/initrd.gz DEBCONF_DEBUG=5 -- auto url=http://debian.namespace.at/d-i/etch/./preseed.cfg locale=en_US interface=auto console-keymaps-at/keymap=us debian-installer/country=AT hostname=installme domain=namespace.at
+</pre>
+
+This will set up an English/US locale, US keyboard, set the preseed.cfg path and kick off installation.
+Hostname and domain are optional, but can be used to override the values from DHCP.
+
+DEBCONF_DEBUG=5 is quite useful to see what's currently happening. While the installer is running you can switch to console 4 to see what's going on. After the installation has finished you can take a look at /var/log/installer and see what happened. Saves quite some time while debugging late_scripts.
+ 

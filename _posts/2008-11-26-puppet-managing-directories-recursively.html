@@ -1,0 +1,35 @@
+--- 
+layout: post
+title: "Puppet: managing directories recursively"
+mt_id: 23
+---
+<p>This is not very obvious from <a href="http://docs.puppetlabs.com/references/stable/type.html#file">Puppet's TypeReference</a>, but you can manage directories in a very interesting way:<br /></p><ul><li>Recursively copy a directory from the filestore to a client <b>_and_</b></li><li>remove all unmanaged files</li></ul>Still not very interesting, but please see the light:<br /><ul><li>You can deploy an empty directory,</li><li>Fill this directory using seperate file resources, possibly from other modules (or even other nodes, if you use exported resources)</li><li>Everything puppet did not put into the directory gets removed.</li></ul>This yields, very effectively, a fully managed directory with lots of flexibility.<br />We're using this approach for all sorts of configuration directories, including:<br /><ul><li>APT's sources.list.d and apt.conf.d</li><li>Debian-Apache2's sites-available/sites-enabled<br /></li><li>Debian-Exim4's conf.d (including subdirectories)</li><li>Bacula director/Munin configuration (in combination with the concatenated_file type)</li></ul> For this to work, you need to do a little bit of work:<br /><ul>
+<li>prepare a directory in your module filestore which will be the (usually empty) source directory<br/>I often put a README file in there, explaining what's going on.</li>
+<li>add this code snippet for managing the target directory:<br />
+<pre>file { "/etc/exim4/conf.d":
+  ensure =&gt; directory, # so make this a directory
+  recurse =&gt; true, # enable recursive directory management
+  purge =&gt; true, # purge all unmanaged junk
+  force =&gt; true, # also purge subdirs and links etc.
+  owner =&gt; "root",
+  group =&gt; "root",
+  mode =&gt; 0644, # this mode will also apply to files from the source directory
+  # puppet will automatically set +x for directories
+  source =&gt; "puppet:///exim/exim4-conf.d-empty",
+}
+</pre></li><li>add one or more file resources which deploy files into the target directory, example:
+<pre>file { "/etc/exim4/conf.d/router/400_testrouter":
+  ensure =&gt; present,
+  owner =&gt; "root",
+  group =&gt; "root",
+  mode =&gt; 0644,
+  source =&gt; "puppet:///exim/exim4-conf.d/router/400_testrouter",
+}
+</pre></li></ul>Because puppet looks for those file resources which manage a sub-dir of the managed directory it is also possible to define a sub-directory with unmanaged files, which will then <b>not</b> get removed - no magic involved here:<br />
+<pre>file { "/etc/exim4/conf.d/acl":
+  ensure =&gt; directory,
+  owner =&gt; "root",
+  group =&gt; "root",
+  mode =&gt; 0755,
+}
+</pre><br /> 

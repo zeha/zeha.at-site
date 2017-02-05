@@ -1,0 +1,14 @@
+--- 
+layout: post
+title: Introducing lastfmproxy-rb
+mt_id: 43
+---
+Last.fm released a new&nbsp;<a href="http://www.last.fm/api/radio">Radio API</a>&nbsp;which must be used instead of the old one now. Unfortunately most programs have not been updated to the new API, including&nbsp;<a href="http://vidar.gimp.org/?page_id=50">lastfmproxy</a>, which I wanted to use to listen to last.fm from my squeezebox (there are some limitations in the native squeezebox/last.fm radio stuff which prevent me from using it).<div><br /></div><div>Therefore, I want to introduce: lastfmproxy-rb (<a href="https://github.com/zeha/lastfmproxy-rb">git repo</a>).</div><div><br /></div><div>This piece of software aims to provide a real Shoutcast/ICY-style "internet radio" stream based on the last.fm radio API. In the current state it's mostly a big hack, but the basics (== listening) works already. ICY metadata is still on my todo list, for example.</div><div><br /></div><div><div><div>Requirements:</div><div><ul><li>ruby 1.8 installed</li><li>last.fm subscriber (limitation of last.fm)</li><li>have an last.fm API key (get it&nbsp;<a href="http://www.last.fm/api/account">here for free</a>)</li></ul></div></div></div><div><br /></div><div>Quick start:</div><div><ul><li>fetch proxy.rb</li><li>create config.rb:<pre>config = {
+  :username =&gt; 'yaddayadda',
+  :password =&gt; 'PASSWORD',
+  :station =&gt; 'lastfm://artist/MGMT/similarartists',
+  :api_key =&gt; 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  :api_secret =&gt; 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+}
+</pre>
+</li><li>ruby ./proxy.rb</li><li>point your audio client to http://localhost:2000/listen.mp3</li></ul></div> 

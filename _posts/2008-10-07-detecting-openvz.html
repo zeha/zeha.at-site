@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: Detecting OpenVZ
+mt_id: 15
+---
+Reliably detecting if there is an <a href="http://www.openvz.org/">OpenVZ</a> Environment is pretty easy:<br /><br />Just check for existance of /proc/user_beancounters.<br /><br />But this will only tell you that OpenVZ is there. It won't tell you, if you are inside an unprivileged Virtual Environment (VE) or on the privileged Hardware Node (HN or VE0).<br />Still an easy check:<br /><br />Read /proc/$PID/status and check for "envID: $VEID". $VEID will be 0 for the Hardware Node (hence the VE0 name). If it's greater than 0, you are inside an unprivileged VE.<br /><br />Facter 1.5.3 will probably have support for <a href="http://projects.puppetlabs.com/issues/show/1634">this</a>.  

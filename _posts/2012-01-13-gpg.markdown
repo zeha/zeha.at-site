@@ -1,0 +1,7 @@
+--- 
+layout: post
+title: "GPG Key Update"
+---
+
+Reminder: the only valid GPG Key you should use for sending me encrypted messages, is [93052E03](/pgp/pubkey.asc).
+This is also the only valid GPG Key I'm using to sign messages.

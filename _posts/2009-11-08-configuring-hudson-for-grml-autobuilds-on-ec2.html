@@ -1,0 +1,117 @@
+--- 
+layout: post
+title: Configuring Hudson for grml autobuilds on EC2
+mt_id: 66
+---
+Suppose you want to do automated builds of grml using the excellent grml-live framework, and host this in a nice autobuilder, like, <a href="http://hudson-ci.org">Hudson</a>. Also you don't have the necessary disk space, RAM, etc. locally so you want to use <a href="http://aws.amazon.com/">Amazon EC2</a> to host the worker machine.
+
+<br/><br/><h2><big><b>Install Hudson</b></big></h2>
+<ul>
+<li><a href="http://hudson-ci.org/">Download Hudson.</a> (Actually grab hudson.war.)
+<li><code>apt-get install sun-java6-jdk</code>
+<li><code>adduser --system --group --disabled-password hudson </code>
+<li><code>su - hudson</code>
+<li><code>java -jar hudson.war</code>
+</ul>
+
+The Hudson web interface should now be listening on port 8080. Go there and configure it.
+
+<br/><br/><h2><big><b>Configure Hudson</b></big></h2>
+
+<ul>
+<li>Use the plugin manager (Click 'Manage Hudson', -> 'Manage Plugins') to install the EC2 plugin. Restart hudson afterwards. (It may take a while until all available plugins are listed. Be patient.)
+<li>Configure the basics ('Mange Hudson' -> 'Configure system'):
+<li>Set "# of executors" to <code>0</code>. This effectively disables any builds on the master.
+<li>In the "Cloud" section add "Amazon EC2".
+<li>Configure Access Key, Secret Key and EC2 RSA private key. (First two are in your Amazon EC2 Credentials, the RSA private key can be created using the EC2 Management Console by using the 'Create keypair' function.)
+<li>Add an AMI:
+<ul>
+<li>AMI ID: <code>ami-fcf61595</code> (current AMI ID from <a href="http://www.alestic.com">alestic.com</a> for Debian squeeze server 64bit)
+<li>Instance Type: <code>LARGE</code> (the Alestic AMI won't work with the SMALL type)
+<li>Description: <code>Debian 6.0 server 64bit (Alestic) US</code>
+<li>Remote FS Root: <code>/mnt/hudson</code> (where the hudson slave will store it's local data. /mnt is the large disk for EC2.)
+<li>Labels: <code>debian-6.0-amd64</code> (AMIs with the same label will be grouped by Hudson)
+<li>Init Script: <code>wget -q http://your.web.server/hudson-slave.run && bash hudson-slave.run</code> (Get my <a href="/blog/2009/11/08/hudson-slave.run">hudson-slave.run</a> and copy it to a web server reachable by your EC2 instances.)
+</ul>
+<li>Save.</li>
+</ul>
+
+By now you should be able to manually add a node on EC2 from 'Mange Hudson' -> 'Manage Nodes' (click "Provision from EC2").
+If this works well, you're mostly done.
+
+<br/><br/><h2><big><b>Setup a build job</b></big></h2>
+Now create a new job for building grml. Job name can be "grml-small amd64 testing" or whatever you actually build :-)<br/>
+Choose "Build a free-style software project" as the proper option.
+
+<br/><br/><h2><big><b>Configure your job</b></big></h2>
+From the job dashboard choose your job, and select "Configure".<br/>
+<br/>
+Check "this build is parameterized" and add two String parameters:
+<ul>
+<li>Name: <code>FLAVOUR</code>
+<li>Default Value: <code>grml-small</code>
+</ul>
+<ul>
+<li>Name: <code>CLASSES</code>
+<li><code>GRMLBASE,GRML_SMALL,AMD64</code>
+</ul>
+
+For the build, you'll need to add two shell steps, with the following script contents:<br/>
+<b>Execute shell step #1:</b><br/>
+<pre>
+#!/bin/bash
+echo "setup system and cleanup"
+set +e
+set +x
+apt-get install -y mksh fai-client fai-server fakeroot squashfs-tools squashfs-lzma-tools bc perl
+apt-get install -y grml-live grml-live-addons
+
+cat > /etc/grml/grml-live.local << EOF
+GRML_LIVE_SOURCES="
+deb http://localhost/apt-cacher/http.us.debian.org/debian squeeze main contrib non-free
+deb http://localhost/apt-cacher/deb.grml.org/ grml-stable  main
+deb http://localhost/apt-cacher/deb.grml.org/ grml-testing main
+"
+FAI_DEBOOTSTRAP="squeeze http://localhost/apt-cacher/http.us.debian.org/debian"
+#SQUASHFS_OPTIONS="-nolzma"
+SUITE="squeeze"
+CLASSES="${CLASSES}"
+VERSION="${BUILD_ID}"
+EOF
+
+grep /grml /proc/mounts | awk '{print $2}' | sort -r | xargs umount
+rm -rf /grml
+
+rm -rf work
+mkdir -p work
+</pre>
+<br/>
+
+<b>Execute shell step #2:</b><br/>
+<pre>
+#!/bin/bash
+echo "actual build"
+set -x
+set -e
+mkdir -p /grml
+mount -t tmpfs -o suid,dev none /grml
+cd /grml
+set +e
+grml-live -g ${FLAVOUR} -F
+RC=$?
+set -e
+cd -
+mv /grml/grml-live/grml_isos/* work/
+umount /grml
+exit $RC
+</pre>
+<br/>
+<br/>
+For post-build Actions you'll want to check "Archive the artifacts" and use "work/**/*.iso" as the files to archive. This way the built ISO will be copied to the Hudson master.
+
+<br/><br/><h2><big><b>Test it</b></big></h2>
+After saving your job config, do a test run by clicking "Build now". After a few moments you should see a build running, and console output should show grml-live doing it's work!<br/>
+<br/>
+<br/>
+You obviously want to customize the parameters to your job as well as the first shell fragment, if you want to build something different than some grml-small amd64 ISO ;-)
+<br/> 

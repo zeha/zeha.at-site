@@ -1,0 +1,9 @@
+--- 
+layout: post
+title: "Grml Talk at Grazer Linuxtage 2011"
+---
+
+I gave an introduction to bare metal deployments and remastering [Grml](http://grml.org/), at the [Grazer Linuxtage 2011](http://glt11.linuxtage.at/). 
+
+[Slides.](/talks/2011/glt11-deployment-grml-live.pdf)
+

@@ -1,0 +1,20 @@
+--- 
+layout: post
+title: "Introducing pbundler"
+---
+
+[pbundler](http://github.com/zeha/pbundler/) is the "Python Bundler".
+
+pbundler is inspired by the great [bundler for Ruby](http://gembundler.com/), which serves the mission of making development in Ruby easier.
+
+pbundler aims to do the same for Python.
+
+In version 0.0.1, just released to PyPI, pbundler is just a thin wrapper over virtualenv and pip. Both are tools you probably already use for your Python development, and rightfully so.
+If you've been following recent best practices, your projects will already have a "requirements.txt" as well.
+
+With all of this in place, you, your development peers and your interested users can just run "pbundle" after cloning your project's source code, and are ready to run.
+
+
+Let's make Python development a bit more awesome. [Fork freely.](http://github.com/zeha/pbundler/)
+
+

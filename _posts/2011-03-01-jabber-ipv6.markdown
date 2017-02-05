@@ -1,0 +1,28 @@
+---
+layout: post
+title: "Configuring ejabberd for IPv4 + IPv6 on Debian squeeze"
+---
+
+Debian squeeze ships with ejabberd 2.1.5.
+
+The correct way to run this version of ejabberd in dual stack mode is to set up a listener for each of the protocols.
+
+Example:
+
+{% highlight erlang %}
+{listen, [
+  % Ordinary client-2-server service
+  { {5222, "::"},      ejabberd_c2s,     [{access, c2s}, {max_stanza_size, 65536},
+                       starttls, {certfile, "/etc/ejabberd/ejabberd.pem"}, {shaper, c2s_shaper}]},
+  { {5222, "0.0.0.0"}, ejabberd_c2s,     [{access, c2s}, {max_stanza_size, 65536},
+                       starttls, {certfile, "/etc/ejabberd/ejabberd.pem"}, {shaper, c2s_shaper}]},
+  % SSL-enabled client-2-server service
+  { {5223, "::"},      ejabberd_c2s,     [{access, c2s}, {max_stanza_size, 65536},
+                       tls, {certfile, "/etc/ejabberd/ejabberd.pem"}, {shaper, c2s_shaper}]},
+  { {5223, "0.0.0.0"}, ejabberd_c2s,     [{access, c2s}, {max_stanza_size, 65536},
+                       tls, {certfile, "/etc/ejabberd/ejabberd.pem"}, {shaper, c2s_shaper}]},
+  % Server-2-server service
+  { {5269, "::"},      ejabberd_s2s_in,  [{shaper, s2s_shaper}, {max_stanza_size, 131072}]},
+  { {5269, "0.0.0.0"}, ejabberd_s2s_in,  [{shaper, s2s_shaper}, {max_stanza_size, 131072}]},
+  % ... 
+{% endhighlight %}

@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: EDAC i5000 NON-FATAL ERRORs on HP ProLiant Hardware
+mt_id: 36
+---
+If you're seeing messages like 'EDAC i5000 NON-FATAL ERROR' in your kernel.log, and that is on HP ProLiant hardware (DL360 G5 in this case), take them seriously and PANIC ^W act immediately. (These messages are neither a <a href="http://marc.info/?l=fedora-list&amp;m=121220070120235&amp;w=2">kernel bug</a> nor a <a href="http://markmail.org/message/sblchfhe34uefchg">hardware bug</a>, but the plain truth.)<br /><br />Just had a machine panic with an NMI today, and we've delayed ^W ignored the kernel messages for a few days...<br /><br />Causes could probably be faulty RAM, faulty system board, or something else. If you don't get a lit 'memory faulty' LED, the IML will helpfully save a bit of info when an NMI occours, so you at least have something to tell HP.<br /><br />  

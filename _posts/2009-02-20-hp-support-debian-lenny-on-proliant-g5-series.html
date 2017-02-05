@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: HP support Debian lenny on ProLiant G5 series
+mt_id: 30
+---
+<a href="http://www.debian.org/News/2009/20090214">Debian 5.0 ("lenny") has landed</a>, and now <a href="http://hp.com/go/debian">HP officially supports</a> it.<br /><br />The first downloads are <a href="http://h20000.www2.hp.com/bizsupport/TechSupport/SoftwareIndex.jsp?lang=en&amp;cc=us&amp;prodNameId=3288144&amp;prodTypeId=15351&amp;prodSeriesId=1121486&amp;swLang=8&amp;taskId=135&amp;swEnvOID=4033">available on the regular support pages</a>. I've been waiting for this to happen for a very long time, and will now test what has been delivered.<br /><br />Update: the ILO components seem to be missing from this initial release, but hpasm, hpacucli are fully functional, and I suspect the other software packages will work too (hpsmh, hpadu, hp-snmp-agents, cpqacuxe). Manually installing ia32-libs was necessary on amd64, as hpbootcfg crashed without it.<br />  

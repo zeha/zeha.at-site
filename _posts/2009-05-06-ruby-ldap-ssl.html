@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: ruby-ldap + SSL
+mt_id: 34
+---
+If you have trouble with ruby-ldap to connect to an SSL-only LDAP server, there can be <b>lots</b> of reasons. From what I've seen today, the next time I've problems like this I'd check these things first:<br /><br /><ul><li>does ldapsearch -x -H ldaps://your.ldap.hostname work?</li><ul><li>if not, fix this. usually you need to set TLS_CACERT in /etc/ldap/ldap.conf<br /></li></ul><li>check the underlying ldap library. ruby's ldap library can be linked against the OpenLDAP libldap or against the Netscape LDAP SDK. Make sure the binaries supplied with the correct library can connect to your ldap server.<br /><br /></li><li>check that the minimum amount of code works, an example would be:<br /><br />require 'ldap'<br /><br />conn = LDAP::SSLConn.new( 'your.ldap.hostname', 636 )<br />conn.set_option( LDAP::LDAP_OPT_PROTOCOL_VERSION, 3 )<br />conn.bind('cn=loginuser,o=foo','FOOPASSWORD') {<br />&nbsp; conn.perror("bind")<br />}<br /><br /></li></ul>In my case, I was missing the TLS_CACERT config option in /etc/ldap/ldap.conf and was only getting a useless "Connect error" from ruby.<br /> 

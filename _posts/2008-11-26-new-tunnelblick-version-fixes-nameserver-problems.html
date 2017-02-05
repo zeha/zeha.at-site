@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: New Tunnelblick version fixes Nameserver problems
+mt_id: 24
+---
+If your company uses <a href="http://www.openvpn.net/">OpenVPN</a> as the VPN-solution for road warriors, and you are using a Mac, you are probably using <a href="http://code.google.com/p/tunnelblick/">Tunnelblick</a>. Tunnelblick is a nice GUI wrapper for OpenVPN on OS X. (I understand it consists of a bit more than a wrapper, but you never see those parts.)<br /><br />I recently upgraded to version 3.0b9 which fixed all those nasty crash bugs, but created a new problem for me: it would no longer correctly set the nameserver if told to. Even worse, it would somehow destroy /etc/resolv.conf, so all name resolution went out while using the VPN. Not very useful, so I lived without the company nameservers and tried to remember the important IP addresses instead (uh).<br />On November 20th a new version was released - 3.0b10 - which fixes this problem, but this is not noted in the <a href="http://code.google.com/p/tunnelblick/wiki/ReleaseNotes">ReleaseNotes</a>. I suspect the bug was fixed in openvpn and not in Tunnelblick, and the new openvpn version which is included in the new Tunnelblick version no longer suffers from this problem.<br /><br />Yay.<br />  

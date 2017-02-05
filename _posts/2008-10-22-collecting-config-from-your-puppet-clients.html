@@ -1,0 +1,44 @@
+--- 
+layout: post
+title: Collecting config from your Puppet clients
+mt_id: 19
+---
+I'm doing more boring stuff using Puppet this week, but there are some highlights anyway. I needed to configure Nagios/NRPE-checks on all clients for disk usage, process count, swap space and system load.<br />In our setup the NRPE daemon needs to have the warning and critical values for those on the client. Configuring this for new clients is trivial, but for old ones it's quite a bit of manual work to collect the old configuration (instead of deploying the defaults and see what happens - avoiding Nagios alert storms is ++).<br /><br />Facter + storedconfigs wipes all the manual stuff away:<br /><ul><li>deploy a new fact which collects the interesting stuff from nrpe.cfg</li><li>write a simple SELECT against the puppet database</li><li>(optional) write a simple script which tells you, what "default config" actually means<br /></li><li>enjoy your config values</li></ul><br />The collecter fact:<br /><pre>Facter.add("nrpe_collect") do
+	setcode do
+		fn = "/etc/nagios/nrpe_local.cfg"
+		lines = File.read(fn)
+		str = ""
+		lines.each {|x|
+			if x =~ /check_(disk|procs|swap|load)/
+				str+=";" + x.chomp 
+			end
+		}
+		str
+	end
+end
+</pre>(Not the most beautiful ruby, but that took me like one minute to think and write.)<br /><br />Query the puppet db (syntax for Postgres):
+<pre>select hosts.name||' '||value from fact_values <br />  inner join hosts on fact_values.host_id=hosts.id<br /> &nbsp;inner join fact_names on fact_values.fact_name_id=fact_names.id<br /> &nbsp;where fact_names.name='nrpe_collect';</pre>
+Results:
+<pre> vnode02.in.domain.at ;command[check_disk]=/usr/lib/nagios/plugins/check_disk -X nfs -w 20% -c 10%;command[check_load]=/usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20;command[check_swap]=/usr/lib/nagios/plugins/check_swap -w75% -c50%;command[check_procs]=/usr/lib/nagios/plugins/check_procs -w 1200 -c 1450
+ vnode03.in.domain.at ;command[check_disk]=/usr/lib/nagios/plugins/check_disk -X nfs -w 20% -c 10%;command[check_load]=/usr/lib/nagios/plugins/check_load -w 15,10,5 -c 30,25,20;command[check_swap]=/usr/lib/nagios/plugins/check_swap -w75% -c50%;command[check_procs]=/usr/lib/nagios/plugins/check_procs -w 1200 -c 1450
+ (...)
+</pre>
+<br />This will probably result in the following manifest tomorrow:<br />In our allhosts class:<br />
+<pre># nagios plugin for disk usage
+if $disk_warning {
+	$disk_warning = $disk_warning	# need this for puppet &lt;0.24.6
+} else {
+	$disk_warning = "20%"<br />}
+if $disk_critical {
+	$disk_critical = $disk_critical
+} else {
+	$disk_critical = "10%"
+}
+nagios::plugin { "check_disk":
+	check_script =&gt; "check_disk",
+	args =&gt; "-w $disk_warning -c $disk_critical -X nfs",
+}</pre>
+And the clients which are determined to have special values will get this in their node files:
+<pre>	$disk_critical = "5%"
+	$disk_warning = "10%"
+</pre> 

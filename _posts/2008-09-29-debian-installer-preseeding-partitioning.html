@@ -1,0 +1,20 @@
+--- 
+layout: post
+title: "Debian Installer preseeding: partitioning"
+mt_id: 6
+---
+For automated Debian installations you usually have two choices:<br /><ul><li>scripted install</li><li>image based<br /></li></ul>I actually don't like image based installs - they are usually a pain to update (with security updates, etc). For our automated installations I therefore chose a scripted approach, based on <a href="http://d-i.alioth.debian.org/manual/en.i386/apb.html">preseeding</a>.<br />Most things are quite obvious to implement, but there are a few tricks still.<br /><br />Partitioning is one of the tasks which is <b>really</b> tricky. It's so easy to get something wrong, and the installer will just not tell you why it failed.<br /><br />What I wanted to achieve:<br /><ul><li>16GB root fs on the first HP SmartArray device, outside LVM</li><li>rest of the first hpsa device as an LVM PV</li><li>one LVM VG called "vg1"</li><li>1GB swap inside that</li><li>leave the other devices untouched</li></ul>After taking a look at the <a href="http://d-i.alioth.debian.org/manual/en.i386/apbs04.html#preseed-partman">relevant docs</a> it looked like I could preseed the LVM stuff, but in the end I gave up doing that. Time needed to figure out what's wrong just isn't worth it. <br /><br />So I ended up doing a simple recipe, which creates a 16GB rootfs (becoming /dev/cciss/c0d0p1) and a swap partition. The swap partition usually ends up being a logical partition, spanning the rest of the blockdevice (becoming /dev/cciss/c0d0p5).<br /><br />Example:<br />
+
+<pre>d-i partman-auto/expert_recipe string regularvnode :: 16000 16000 16000 ext3 $primary{ } $bootable{ } method{ format } format{ } use_filesystem{ } filesystem{ ext3 } mountpoint{ / } .  100 10000 1000000000 linux-swap method{ swap } format{ } .</pre><br /><br />This example actually works. So safe it for reference!<br /><br /><br />In the late script I then run parted to drop the swap partition and prepare LVM:<br /><br />Example late_script:<br /><br />
+
+<pre>echo "Configuring LVM"
+swapoff -a
+swapoff /dev/cciss/c0d0p5
+parted /dev/cciss/c0d0 -- rm 2
+parted /dev/cciss/c0d0 -- mkpart primary ext2 16GB -1s
+parted /dev/cciss/c0d0 -- toggle 2 lvm
+pvcreate /dev/cciss/c0d0p2
+apt-install lvm2 # make sure target knows about lvm
+</pre>
+
+All of this was only tested with Debian etch. The lenny installer has a new share of problems, and I haven't successfully seeded it yet.<br /><br />One thing to know: you can't have no swap partition. While this works when doing a manual install, it doesn't when seeded. In my experience the installer would just endlessly loop in the partitioner.<br /> 

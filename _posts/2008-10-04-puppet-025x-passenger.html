@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: Puppet 0.25.x + Passenger
+mt_id: 13
+---
+ In my <a href="http://zeha.at/blog/2008/09/puppet-passenger.html">previous entry</a> about Puppet I was talking about using Puppet 0.24.6 (unreleased) inside Apache. (More specifically: running puppetmaster with Passenger in Apache).<br /><br />I've now got a working code base for Puppet 0.25.x. + Passenger.<br /><br />See for yourself:<br /><a href="http://github.com/zeha/puppet-rack/commits/feature/rack/">http://github.com/zeha/puppet-rack/commits/feature/rack/</a><br /><br />Unfortunately it seems like the current Puppet 0.25.x client can't talk to the corresponding master (regardless of WEBrick or Passenger), as not all required handlers/methods are implemented in the new REST interface.<br /> 

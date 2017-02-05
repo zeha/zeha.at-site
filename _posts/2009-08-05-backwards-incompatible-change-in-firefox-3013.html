@@ -1,0 +1,11 @@
+--- 
+layout: post
+title: Backwards incompatible change in Firefox 3.0.13
+mt_id: 51
+---
+Seems like Firefox 3.0.13 has been released, as well as the updates for
+Ubuntu, probably fixing the BlackHat related SSL problems.<br /><br />This is of course fine, but the fix seems to have broken behavior we've relied on for all too long: <br /><br />Previously,
+given a certificate for *.domain.com, this would (in Firefox, not in
+other browsers) also be valid for a host called "foo.bar.domain.com".
+As of 3.0.13 this is no longer true, and therefore we're getting loads
+of SSL errors now...<br /><br />(I've not validated this with Firefox on Windows.)<br />   

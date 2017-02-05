@@ -1,0 +1,10 @@
+--- 
+layout: post
+title: "conhost crashes AKA cmd windows disappear"
+---
+
+If your cmd windows keep disappearing when using a Win32 version of git, or some configure scripts, this MS KB article is for you:
+[The conhost.exe process crashes when an application exits on Windows 7 or Windows Server 2008 R2](http://support.microsoft.com/kb/2458000) (KB2458000).
+
+BTW, requesting hotfixes by email works fully automated, so you'll have the download link a few minutes later.
+

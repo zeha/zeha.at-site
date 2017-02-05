@@ -1,0 +1,19 @@
+--- 
+layout: post
+title: Puppet + Passenger
+mt_id: 2
+---
+<p>I've been working the last few days on getting puppetmaster (the <a href="http://www.puppetlabs.com/puppet/">Puppet</a> server) running inside Apache, using <a href="http://www.modrails.com/">Passenger</a>.<br /></p>
+
+<p><font style="font-size: 1.5625em;">Why Passenger?</font></p>
+
+<p>Simple answer: for the performance. We currently have over 150 servers (many of the virtual) to manage. Right now only a small subset of these servers is running the puppet client, but I'm looking forward to the point where we will manage all of them using puppet.</p><p>The <a href="http://projects.puppetlabs.com/projects/puppet/wiki/Using_Mongrel">puppet docs</a> have to say this about scaling:</p><blockquote><p><i>Mongrel scales much better than WEBrick, at least partially because
+it allows you to run multiple processes serving the same pool of
+clients on the same host. WEBrick only uses Ruby's threading, which
+does not scale beyond one processor, and it appears that WEBrick starts
+dropping connections beyond about 2 concurrent connections.</i></p><p><i>If you're getting connection-reset or End-of-file errors, you should
+try Mongrel. As more people try it and it proves to be stable, it will
+eventually become the preferred serving platform for the master.</i></p></blockquote>
+<p>While I understand that WEBrick is more or less just a development web server, I also know from other projects that Mongrel just doesn't cut it. The puppet way of running mongrel also seems to be even more cumbersome than running mongrel with mongrel-cluster. But, in any case, there is no one monitoring your mongrel processes, to see if they would die and then restart them. And I saw lots of mongrels dieing for various reasons already. (None of them were puppet mongrels though, didn't even bother trying that.)</p><p><font style="font-size: 1.5625em;">First Results</font></p><p>The first result of my effort is a fully working puppetmaster for puppet 0.24.x running as a Passenger app. Technically, it's behaving like a <a href="http://rack.rubyforge.org/">rack</a> application (and my config.ru is using the rack library), so Passenger just auto-discovers it and launches a puppetmaster instance on the first client connect.</p><p>All the usual Passenger configuration should apply, including process limits etc.</p><p><font style="font-size: 1.5625em;">Caveats</font><br /></p><p>You may wonder how SSL is handled in this configuration - Apache handles it, just like in a puppetmaster with mongrel setup. This has a few implications: Apache won't start up if the standalone puppetmasterd never started up and created the SSL certificates and CA. Everything else should work just fine.</p><p>There's also another catch: Passenger will <b>not</b> start an application as root, but always as the designated application user. Therefore puppetmaster will not create all the usual stuff (== no manifest check). This needs to be done by the standalone puppetmasterd, at least once.</p><font style="font-size: 1.5625em;">Trying it out</font><br /><br /><ul><li>Get puppet 0.24.6-pre from <a href="http://github.com/jamtur01/puppet/tree/0.24.x">puppet 0.24.x stable branch (at github.com)</a></li><li>Get my patch from <a href="http://groups.google.com/group/puppet-dev/browse_thread/thread/a3a013723a3769c9">my puppet-dev posting</a> or check the <a href="http://projects.puppetlabs.com/issues/show/1603">redmine ticket</a></li><li>Follow the instructions in the <a href="http://projects.puppetlabs.com/projects/puppet/wiki/Using_Passenger">puppet wiki</a></li></ul><p><font style="font-size: 1.5625em;">What about 0.25.x?</font></p><p>I'm still working on that. 0.25.x changed the whole server side, so I've got a lot to do here.</p><p><br /></p>
+ 
+

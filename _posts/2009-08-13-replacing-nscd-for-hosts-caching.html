@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: Replacing nscd for "hosts" caching
+mt_id: 52
+---
+I'm currently looking for a replacement for caching the Linux NSS "hosts" "database". Basically, my goal is caching DNS lookups, but with a few restrictions:<div><ul><li>The cache should not cache until the DNS TTL expires, but for a maximum of a configurable TTL. This is needed, so I can easily flush the DNS caches on the central resolvers, but don't need to worry about the cache on each and every machine.</li><li>The cache should ask one or more centrally installed resolvers, as they have special configurations for some domains.</li><li>The cache should be running locally, as everything else will break at some point. *</li></ul><div><br /></div><div>nscd is designed to do this, but unfortunately it has serious bugs which make it unsuitable for use, including&nbsp;<a href="http://sourceware.org/bugzilla/show_bug.cgi?id=4428">this bug</a>&nbsp;(which also features a nice "Drepper response").</div><div><br /></div><div>I'm not sure which software to use yet, maybe it doesn't even exist.</div><div><br /></div><div>Any recommendations?</div></div> 

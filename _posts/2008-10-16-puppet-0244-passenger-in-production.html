@@ -1,0 +1,6 @@
+--- 
+layout: post
+title: Puppet 0.24.4 + Passenger in production
+mt_id: 18
+---
+Today we moved our Puppetmaster 0.24.4 installation to Passenger.<br /><br />We've previously be running just plain WEBrick, and after adding a few more clients Yesterday, we ran into some troubling issues. A few clients just failed fetching files from the fileserver with "Connection reset by peer" errors.<br /><br />Those errors seem to be gone now, and a few short puppetrun-s show that 6 master processes handle our (for now) 30 clients fine - and quick.<br /><br />storedconfigs got us into some trouble at first: after the first client run, the master failed with a PGError saying that the PostgreSQL connection went away. I band-aided this with an ActiveRecord::Base.remove_connection in rack.rb after the client request has been executed; this should not do any harm, and works fine so far.<br />   

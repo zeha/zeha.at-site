@@ -1,0 +1,6 @@
+pygments: true
+source: .
+permalink: /blog/:year/:month/:title.html
+markdown: rdiscount
+include: [".htaccess", ".well-known"]
+
