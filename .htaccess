@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteRule ^Blog(.*)$ /blog$1 [R=permanent]
+RewriteRule ^blog/2008/11/tcpdump-go-non-promiscuous$ /blog/2008/11/tcpdump-go-non-promiscuous.html [R=permanent]
+RewriteRule ^blog/2008/09/debian-installer-preseeding-partition$ /blog/2008/09/debian-installer-preseeding-partitioning.html [R=permanent]
+
+RewriteCond %{HTTP_HOST} ^zeha\.at
+RewriteRule ^(.*)$ http://christian.hofstaedtler.name/$1 [R=permanent,L]
