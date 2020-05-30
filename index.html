@@ -1,125 +1,15 @@
 ---
 layout: default
-title: Portfolio
 ---
 
-<div id="home">
+{% for post in site.posts limit:1 %}
+<div id="post" class="front">
+  <h1>{{ post.title }}</h1>
 
-  <div class="pf pfdeduktiva">
-    <div class="pfp">
-      <h2>Deduktiva</h2>
-      Current Ventures<br>
-      <a href="http://deduktiva.com/">Deduktiva.com</a>
-      <div class="timeframe">2014-</div>
-    </div>
-  </div>
+  <span>{{ post.date | date_to_string }}</span> &mdash; <a href="{{ post.url }}">Permalink</a><br>
+  <br>
 
-  <div class="pf pfcanidepend">
-    <div class="pfp">
-      <h2>CanIDepend.com</h2>
-      Library and Interpreter version tracking<br>
-      <a href="http://canidepend.com/">CanIDepend.com</a>
-      <div class="timeframe">2012-</div>
-    </div>
-  </div>
-
-  <div class="pf pfpowerdns">
-    <div class="pfp">
-      <h2>PowerDNS</h2>
-      Certified Consultant / API Developer<br>
-      <a href="https://github.com/PowerDNS/pdns/commits?author=zeha">github.com/PowerDNS</a>
-      <div class="timeframe">2012-</div>
-    </div>
-  </div>
-
-  <div class="pf pfhostingstack">
-    <div class="pfp">
-      <h2>HostingStack</h2>
-      Open-Source Platform-as-a-Service stack<br>
-      <a href="http://hostingstack.org/">hostingstack.org</a>
-      <div class="timeframe">2011-2012</div>
-    </div>
-  </div>
-
-  <div class="pf pfmag">
-    <div class="pfp">
-      <h2>Magnolia</h2>
-      Reimplementation of compiler and runtime of a business-application language abandoned in the 90ies<br>
-      <a href="http://magnolia.zeha.at/screenshots.html">magnolia.zeha.at</a> <small>(in German)</small>
-      <div class="timeframe">2010-</div>
-    </div>
-  </div>
-
-  <div class="pf pfdebian">
-    <div class="pfp">
-      <h2>Debian Developer</h2>
-      Package Maintainer<br>
-      <a href="http://qa.debian.org/developer.php?login=zeha@debian.org">debian.org</a>
-      <div class="timeframe">2008-</div>
-    </div>
-  </div>
-
-  <div class="pf pfgrml">
-    <div class="pfp">
-      <h2>Grml Live Linux</h2>
-      Live Linux distribution for system administrators<br>
-      <a href="http://grml.org">grml.org</a>
-      <div class="timeframe">2010-2011</div>
-    </div>
-  </div>
-
-  <div class="pf pfhdlclog">
-    <div class="pfp">
-      <h2>HDLC Logger</h2>
-      Embedded software development for a HDLC logging/forwarding application<br>
-      Unnamed client
-      <div class="timeframe">2011</div>
-    </div>
-  </div>
-  
-  <div class="pf pfiosgame">
-    <div class="pfp">
-      <h2>iPhone Game</h2>
-      iOS Game client for an otherwise browser-based game<br>
-      Unnamed client
-      <div class="timeframe">2010</div>
-    </div>
-  </div>
-  
-  <div class="pf pfinqnet">
-    <div class="pfp">
-      <h2>Infrastructure Manager</h2>
-      <br>
-      <div class="timeframe">2007-2010</div>
-    </div>
-  </div>
-
-  <div class="pf pfeasyname">
-    <div class="pfp">
-      <h2>easyname</h2>
-      First fully-automated Austrian Domain Registrar<br>
-      <a href="http://easyname.eu">easyname.eu</a>
-      <div class="timeframe">2005-2007</div>
-    </div>
-  </div>
-
-  <div class="pf pfecard">
-    <div class="pfp">
-      <h2>Vienna University of Technology</h2>
-      <b>Industrial Software</b><br>
-      Software Developer Windows Drivers<br>
-      Austrian Health Insurance Card<br>
-      <a href="http://www.inso.tuwien.ac.at/">www.inso.tuwien.ac.at</a>
-      <div class="timeframe">2005-2007</div>
-    </div>
-  </div>
-
-  <div class="pf">
-    <div class="pfp">
-      <h2>MailFilter</h2>
-      Spam-protection for Novell GroupWise running on Novell NetWare<br>
-      <div class="timeframe">2004-2005</div>
-    </div>
-  </div>
-
+  {{ post.content }}
+  <br/>
 </div>
+{% endfor %}
