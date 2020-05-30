@@ -5,3 +5,5 @@ RewriteRule ^blog/2008/09/debian-installer-preseeding-partition$ /blog/2008/09/d
 
 RewriteCond %{HTTP_HOST} ^zeha\.at
 RewriteRule ^(.*)$ http://chris.hofstaedtler.name/$1 [R=permanent,L]
+
+RewriteRule ^/blog/atom.xml https://chris.hofstaedtler.name/atom.xml [R=permanent,L]
