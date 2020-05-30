@@ -5,8 +5,8 @@ layout: nil
 <feed xmlns="http://www.w3.org/2005/Atom">
  
  <title>Chris Hofstaedtler</title>
- <link href="http://zeha.at/atom.xml" rel="self"/>
- <link href="http://zeha.at/"/>
+ <link href="https://chris.hofstaedtler.name/atom.xml" rel="self"/>
+ <link href="https://chris.hofstaedtler.name//"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>http://zeha.at/</id>
  <author>
@@ -16,7 +16,7 @@ layout: nil
  {% for post in site.posts %}
  <entry>
    <title>{{ post.title }}</title>
-   <link href="http://zeha.at{{ post.url }}"/>
+   <link href="https://chris.hofstaedtler.name{{ post.url }}"/>
    <updated>{{ post.date | date_to_xmlschema }}</updated>
    <id>http://zeha.at{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
