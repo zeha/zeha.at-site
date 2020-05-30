@@ -4,13 +4,13 @@ layout: nil
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>christian hofstaedtler</title>
+ <title>Chris Hofstaedtler</title>
  <link href="http://zeha.at/atom.xml" rel="self"/>
  <link href="http://zeha.at/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>http://zeha.at/</id>
  <author>
-   <name>christian hofstaedtler</name>
+   <name>Chris Hofstaedtler</name>
  </author>
 
  {% for post in site.posts %}
