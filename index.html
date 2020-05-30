@@ -2,14 +2,36 @@
 layout: default
 ---
 
-{% for post in site.posts limit:1 %}
-<div id="post" class="front">
-  <h1>{{ post.title }}</h1>
+<div id="front">
 
-  <span>{{ post.date | date_to_string }}</span> &mdash; <a href="{{ post.url }}">Permalink</a><br>
-  <br>
+  <h1>Introduction</h1>
 
-  {{ post.content }}
-  <br/>
+  <p>
+    Hello! I'm Chris Hofstaedtler, and I am a software consultant & developer, living in Vienna, Austria.
+    I'm interested in all sorts of technological, social and economic topics. I also like social dancing.<br>
+    During a normal workday, I do paperwork at <a href="https://deduktiva.com/">Deduktiva</a>, the consulting umbrella corporation I run.<br>
+  </p>
+
+  <p>
+    I can be contacted at <span id="inlineemail">first@last.name</span> or via Twitter <a href="https://twitter.com/ch2500/">@ch2500</a>.
+  </p>
+
+  <p>
+    I contribute to a number of open source projects:<br>
+    <ul>
+      <li><a href="https://www.debian.org">Debian</a></li>
+      <li><a href="https://www.powerdns.com/opensource.html">PowerDNS</a></li>
+      <li>... and many smaller ones.</li>
+    </ul>
+    More software can be found over at my <a href="https://github.com/zeha/">GitHub page</a>.
+  </p>
+
+  <p>
+    Longer texts I wrote can be found in the <a href="/blog/">archive</a>.
+  </p>
+
+  <small>The general format of this page is based upon <a href="https://berthub.eu">bert huberts</a> page, thanks!</small>
 </div>
-{% endfor %}
+<script>
+  document.getElementById('inlineemail').href = 'mailto:' + window.location.hostname.replace('.','@');
+</script>
