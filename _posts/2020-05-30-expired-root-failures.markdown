@@ -183,4 +183,5 @@ Note how it ignores the AddTrust
 * [AddTrust root](https://crt.sh/?id=1)
 * [Ryan Sleevi's analysis of GnuTLS](https://twitter.com/sleevi_/status/1266731836912422912)
 * [My ticket for fixing apt.puppet.com](https://tickets.puppetlabs.com/browse/CPR-741)
-
+* [Sectigo KB article](https://support.sectigo.com/Com_KnowledgeDetailPage?Id=kA03l00000117LT)
+* [Debian bug for GnuTLS](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=961889)
