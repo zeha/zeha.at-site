@@ -147,8 +147,13 @@ pre, code {
     font-family: "Inconsolata", "Courier New", monospace;
 }
 
-#blogindex {
+ul, ol {
+    margin-left: 1.35em;
 }
+ul {
+    list-style-type: disc;
+}
+
 .posts li span {
     font-family: "Inconsolata", "Courier New", monospace;
 }
@@ -166,14 +171,6 @@ pre, code {
 
 #post pre {
     margin-left: 2em;
-}
-
-
-#post ul, #post ol {
-    margin-left: 1.35em;
-}
-#post ul {
-    list-style-type: disc;
 }
 
 
