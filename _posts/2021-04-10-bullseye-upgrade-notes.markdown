@@ -88,7 +88,7 @@ And then, the full upgrade:
 apt full-upgrade
 ```
 
-Once this finished, note that your zsh completion is broken. Continue on with one last command before exiting `script`:
+Once this finished, note that your zsh completion is broken (until restarting zsh). Continue on with one last command before exiting `script`:
 
 ```
 apt autoremove --purge
@@ -167,3 +167,6 @@ On simple setups you will not see any problems, but not all setups are simple.
 
 Most notably, ifupdown's `networking.service` injects a `udevadm settle` service into the boot chain, and waits for that to complete before configuring network interfaces.
 If you have lots of (say, block) devices, that `udevadm settle` command might very well fail (timeout), and you will not have a running network setup.
+
+---
+*(Thanks to Michael Biebl for pointing me at the init-system-helpers change.)*
