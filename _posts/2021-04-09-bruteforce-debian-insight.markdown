@@ -79,7 +79,7 @@ And thats a good thing!
 If... we actually knew all of the rules and dates in advance.
 And if package maintainers would understand them.
 
-Judging by the questions appearing on the mailing lists, IRC and also my own confusion about these rules, I can only conclude that they are not clear enough. Maybe they are just not communicated clearly enough.
+Judging by the questions appearing on the mailing lists, IRC and also my own confusion about these rules, I can only conclude that they are not clear enough. Maybe they are not *communicated* clearly enough.
 
 ## UDD: Getting some insight
 
