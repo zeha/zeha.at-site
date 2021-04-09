@@ -102,7 +102,10 @@ Note that checking the status more than once a day is mostly pointless. Most aut
 
 ```
 #!/bin/sh
+# maintainer email address
 DEBEMAIL="you@example.org"
+# extra packages we are interested in
+EXTRA_PKGS="ansible,asterisk"
 exec psql "postgresql://udd-mirror:udd-mirror@udd-mirror.debian.net/udd" -XbAt <<EOT
 WITH pkgs AS (
   SELECT source FROM sources
@@ -110,7 +113,7 @@ WITH pkgs AS (
   AND release = 'sid'
   GROUP BY 1
   UNION
-  SELECT 'ansible'  -- extra package we are interested in
+  SELECT unnest(string_to_array('${EXTRA_PKGS}', ','))
 ),
 latest_ci AS (
   SELECT ci.*
