@@ -108,7 +108,10 @@ WITH pkgs AS (
   SELECT source FROM sources
   WHERE (maintainer_email = '${DEBEMAIL}' OR uploaders ILIKE '%${DEBEMAIL}%')
   AND release = 'sid'
-  GROUP BY 1),
+  GROUP BY 1
+  UNION
+  SELECT 'ansible'  -- extra package we are interested in
+),
 latest_ci AS (
   SELECT ci.*
   FROM ci JOIN (
