@@ -67,7 +67,7 @@ Which might be good. Or not. Lets say I am neutral to this.
 
 As a package maintainer you are supposed to know if your package is a key package.
 
-But how do you get to know this? By checking the list! Which can change each day.
+But how do you get to know this? By checking the list! Which can change every day.
 
 ## Follow the rules
 
