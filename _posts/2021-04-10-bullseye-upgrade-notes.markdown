@@ -3,7 +3,7 @@ layout: post
 title: "My notes on upgrading to Debian bullseye"
 ---
 
-Debian 11 "bullseye" should be getting released soon. While I am already running a few VMs on bullseye/sid, only today I tried upgrading from Debian 10 "buster". Here are my notes.
+[Debian 11](https://www.debian.org/releases/bullseye/) "bullseye" should be getting released soon. While I am already running a few VMs on bullseye/sid, only today I tried upgrading from Debian 10 "buster". *Here are my notes.*
 
 Many things mentioned here are also noted in the official [Release Notes](https://www.debian.org/releases/bullseye/amd64/release-notes/index.en.html).
 
@@ -18,6 +18,8 @@ My VMs tend to follow a slimmed down variant of the setup scheme dubbed "Wiener 
 - Updates are installed by unattended-upgrades
 - Depending on the VM, lots of third-party repositories are present (at least: [Puppet](http://apt.puppet.com/))
 - etckeeper is installed
+
+Notably absent here are setups with many block devices; I will try upgrading such systems at a later date.
 
 ## Pre-Update cleanup
 
