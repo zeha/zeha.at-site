@@ -146,7 +146,7 @@ The `|| true` is necessary during boot, as I did not want to add explicit orderi
 
 `iptables -nL` is very empty. At least `ferm` still uses `iptables-legacy`, so you have to use `iptables-legacy -nL` to look at the active rules.
 
-Speaking of ferm: the author [has stated](https://github.com/MaxKellermann/ferm/issues/35) that one would better directly use `nftables` instead of making ferm use nft. I have to investigate this.
+Speaking of ferm: the author [has stated](https://github.com/MaxKellermann/ferm/issues/35) one should consider switching to `nftables`. I have to investigate this.
 
 ### Third party repositories
 
